@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>School Library</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230ea5e9'/%3E%3Cpath d='M25 30 Q25 20 35 20 L65 20 Q75 20 75 30 L75 70 Q75 80 65 80 L35 80 Q25 80 25 70 Z' fill='none' stroke='white' stroke-width='5'/%3E%3Cpath d='M35 20 L35 80' stroke='white' stroke-width='4'/%3E%3Cpath d='M45 35 L60 35' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M45 45 L55 45' stroke='white' stroke-width='3' stroke-linecap='round' opacity='0.6'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#0ea5e9">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #f0f9ff;
+            --surface: rgba(255,255,255,0.85);
+            --surface-solid: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(226,232,240,0.6);
+            --primary: #0ea5e9;
+            --primary-light: #e0f2fe;
+            --success: #22c55e;
+            --success-light: #dcfce7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.1);
+            --radius: 20px;
+            --radius-sm: 14px;
+        }
+        body.dark-mode {
+            --bg: #0f172a;
+            --surface: rgba(30,41,59,0.9);
+            --surface-solid: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: rgba(51,65,85,0.6);
+            --primary: #38bdf8;
+            --primary-light: rgba(56,189,248,0.15);
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.4);
+        }
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        body.locked {
+            overflow: hidden !important;
+            position: fixed !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .header-wrap {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 20px 0;
+        }
+        header {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(14,165,233,0.3);
+        }
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .logo-text span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            color: white;
+            box-shadow: 0 4px 12px rgba(14,165,233,0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14,165,233,0.4);
+        }
+        .btn-ghost {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .btn-ghost:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            border-radius: 10px;
+        }
+        .tab-bar-wrap {
+            padding: 12px 20px 0;
+            position: sticky;
+            top: 88px;
+            z-index: 90;
+        }
+        .tab-bar {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 6px;
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            box-shadow: var(--shadow);
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .tab-btn:hover {
+            color: var(--text);
+            background: var(--primary-light);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            color: white;
+            box-shadow: 0 2px 8px rgba(14,165,233,0.3);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-float {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+        .stat-float:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .stat-float .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .stat-float .value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1;
+        }
+        .stat-float .value.success { color: var(--success); }
+        .stat-float .value.danger { color: var(--danger); }
+        .stat-float .value.warning { color: var(--warning); }
+        .glass-card {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-box {
+            position: relative;
+            max-width: 300px;
+            width: 100%;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            opacity: 0.5;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .book-card {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .book-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #0284c7);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .book-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .book-card:hover::before {
+            opacity: 1;
+        }
+        .book-card .book-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+        }
+        .book-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        .book-card .author {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .book-card .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .book-card .category-tag {
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .book-card .qty {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .book-card .actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        thead {
+            background: var(--bg);
+        }
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        tbody tr:hover {
+            background: var(--primary-light);
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .book-title-cell {
+            font-weight: 700;
+            color: var(--text);
+        }
+        .book-author-cell {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .status-available { background: var(--success-light); color: #166534; }
+        .status-borrowed { background: var(--primary-light); color: #0c4a6e; }
+        .status-overdue { background: var(--danger-light); color: #991b1b; animation: pulse 2s infinite; }
+        .status-lost { background: #f3f4f6; color: #4b5563; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .due-text {
+            font-size: 0.85rem;
+        }
+        .due-text.overdue {
+            color: var(--danger);
+            font-weight: 700;
+        }
+        .days-tag {
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 10px;
+            background: var(--bg);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .days-tag.urgent {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15,23,42,0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalUp 0.3s ease;
+        }
+        @keyframes modalUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+        }
+        .close-btn {
+            background: var(--bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .close-btn:hover {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--text);
+            color: white;
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+            max-width: 400px;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .pin-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0c4a6e, #0f172a);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .pin-overlay.hidden {
+            display: none !important;
+        }
+        .pin-box {
+            background: var(--surface-solid);
+            padding: 48px 40px;
+            border-radius: var(--radius);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+        .pin-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .pin-box p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+        .pin-display {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .pin-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            transition: all 0.2s;
+        }
+        .pin-dot.filled {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .pin-dot.error {
+            background: var(--danger);
+            border-color: var(--danger);
+            animation: shake 0.4s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .pin-key {
+            padding: 20px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+            font-family: inherit;
+            color: var(--text);
+        }
+        .pin-key:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .pin-key:active {
+            transform: scale(0.95);
+        }
+        .pin-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .pin-error-msg {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 12px;
+            min-height: 22px;
+            font-weight: 600;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 12px; }
+            .header-wrap { padding: 12px 12px 0; }
+            .tab-bar-wrap { padding: 8px 12px 0; top: 80px; }
+            header { padding: 12px 16px; }
+            .tab-btn { padding: 8px 14px; font-size: 0.85rem; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .glass-card { padding: 20px; }
+            .book-grid { grid-template-columns: 1fr; }
+            .pin-box { padding: 32px 24px; }
+        }
+        @media print {
+            .no-print { display: none !important; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="pin-overlay" id="pinOverlay">
+        <div class="pin-box">
+            <div style="font-size: 3.5rem; margin-bottom: 12px;">📚</div>
+            <h2>Library Access</h2>
+            <p>Enter your PIN to manage books</p>
+            <div class="pin-display" id="pinDisplay">
+                <div class="pin-dot" id="dot0"></div>
+                <div class="pin-dot" id="dot1"></div>
+                <div class="pin-dot" id="dot2"></div>
+                <div class="pin-dot" id="dot3"></div>
+            </div>
+            <div class="pin-pad">
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(1)" onclick="enterDigit(1)">1</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(2)" onclick="enterDigit(2)">2</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(3)" onclick="enterDigit(3)">3</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(4)" onclick="enterDigit(4)">4</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(5)" onclick="enterDigit(5)">5</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(6)" onclick="enterDigit(6)">6</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(7)" onclick="enterDigit(7)">7</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(8)" onclick="enterDigit(8)">8</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(9)" onclick="enterDigit(9)">9</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();clearPin()" onclick="clearPin()">⌫</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(0)" onclick="enterDigit(0)">0</button>
+                <button class="pin-key" ontouchstart="event.preventDefault();submitPin()" onclick="submitPin()">✓</button>
+            </div>
+            <div class="pin-actions">
+                <button class="btn btn-ghost btn-sm" onclick="forgotPin()">Forgot PIN?</button>
+            </div>
+            <div class="pin-error-msg" id="pinErrorMsg"></div>
+        </div>
+    </div>
+
+    <div id="mainApp" class="hidden" style="display:none;">
+        <div class="header-wrap">
+            <header>
+                <div class="logo">
+                    <div class="logo-icon">📚</div>
+                    <div class="logo-text">
+                        <h1>School Library</h1>
+                        <span>Book Management System</span>
+                    </div>
+                </div>
+                <div class="header-actions no-print">
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addBookModal')">➕ Add Book</button>
+                    <button class="btn btn-ghost btn-sm" onclick="toggleDarkMode()">🌙</button>
+                    <button class="btn btn-ghost btn-sm" onclick="openChangePinModal()">🔐 PIN</button>
+                    <button class="btn btn-ghost btn-sm" onclick="lockApp()">🔒 Lock</button>
+                    <button class="btn btn-ghost btn-sm" onclick="exportData()">📥 Export</button>
+                    <div style="position:relative;overflow:hidden;display:inline-block;" class="btn btn-ghost btn-sm">
+                        📤 Import
+                        <input type="file" accept=".json" onchange="importData(this)" style="position:absolute;left:0;top:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <div class="tab-bar-wrap no-print">
+            <div class="tab-bar">
+                <button class="tab-btn active" onclick="switchTab('books')" id="tab-books">📖 All Books</button>
+                <button class="tab-btn" onclick="switchTab('borrow')" id="tab-borrow">📤 Check Out</button>
+                <button class="tab-btn" onclick="switchTab('return')" id="tab-return">📥 Check In</button>
+                <button class="tab-btn" onclick="switchTab('overdue')" id="tab-overdue">⚠️ Overdue</button>
+                <button class="tab-btn" onclick="switchTab('students')" id="tab-students">👤 Borrowers</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="stats-row">
+                <div class="stat-float">
+                    <div class="label">Total Books</div>
+                    <div class="value" id="statTotalBooks">0</div>
+                </div>
+                <div class="stat-float">
+                    <div class="label">Borrowed</div>
+                    <div class="value warning" id="statBorrowed">0</div>
+                </div>
+                <div class="stat-float">
+                    <div class="label">Overdue</div>
+                    <div class="value danger" id="statOverdue">0</div>
+                </div>
+                <div class="stat-float">
+                    <div class="label">Active Borrowers</div>
+                    <div class="value success" id="statBorrowers">0</div>
+                </div>
+            </div>
+
+            <div class="section active" id="section-books">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">📖 Library Collection</div>
+                        <div class="search-box">
+                            <input type="text" id="bookSearch" placeholder="Search books..." oninput="renderBooks()">
+                        </div>
+                    </div>
+                    <div id="booksTable"></div>
+                </div>
+            </div>
+
+            <div class="section" id="section-borrow">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">📤 Check Out Book</div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Borrower Type *</label>
+                            <select id="borrowerType" onchange="toggleBorrowerFields()">
+                                <option value="student" selected>👨‍🎓 Student</option>
+                                <option value="teacher">👨‍🏫 Teacher</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="studentClassGroup">
+                            <label>Class *</label>
+                            <select id="borrowClass">
+                                <option value="">-- Select Class --</option>
+                                <option value="S.1">S.1</option>
+                                <option value="S.2">S.2</option>
+                                <option value="S.3">S.3</option>
+                                <option value="S.4">S.4</option>
+                                <option value="S.5">S.5</option>
+                                <option value="S.6">S.6</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="teacherDeptGroup" style="display:none;">
+                            <label>Department</label>
+                            <input type="text" id="teacherDept" placeholder="e.g., Science, English, Math">
+                        </div>
+                        <div class="form-group">
+                            <label id="borrowerNameLabel">Student Name *</label>
+                            <input type="text" id="borrowStudent" placeholder="e.g., John Okello">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Books *</label>
+                            <input type="number" id="borrowQty" value="1" min="1" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Book Title *</label>
+                            <input type="text" id="borrowBookTitle" placeholder="e.g., Things Fall Apart">
+                        </div>
+                        <div class="form-group">
+                            <label>Author</label>
+                            <input type="text" id="borrowAuthor" placeholder="e.g., Chinua Achebe">
+                        </div>
+                        <div class="form-group">
+                            <label>Borrowing Days *</label>
+                            <input type="number" id="borrowDays" value="14" min="1" max="365" placeholder="Enter number of days">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width:100%;margin-top:20px;padding:16px;font-size:1rem;" onclick="checkOutBook()">
+                        📤 Check Out Book
+                    </button>
+                </div>
+            </div>
+
+            <div class="section" id="section-return">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">📥 Check In / Return Book</div>
+                        <div class="search-box">
+                            <input type="text" id="returnSearch" placeholder="Search borrowed books..." oninput="renderReturnList()">
+                        </div>
+                    </div>
+                    <div id="returnTable"></div>
+                </div>
+            </div>
+
+            <div class="section" id="section-overdue">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">⚠️ Overdue Books</div>
+                    </div>
+                    <div id="overdueTable"></div>
+                </div>
+            </div>
+
+            <div class="section" id="section-students">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">👤 Student Borrowers</div>
+                        <div class="search-box">
+                            <input type="text" id="studentSearch" placeholder="Search students..." oninput="renderStudents()">
+                        </div>
+                    </div>
+                    <div id="studentsTable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addBookModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Add New Book</h2>
+                <button class="close-btn" onclick="closeModal('addBookModal')">&times;</button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Book Title *</label>
+                    <input type="text" id="newBookTitle" placeholder="e.g., Animal Farm">
+                </div>
+                <div class="form-group">
+                    <label>Author *</label>
+                    <input type="text" id="newBookAuthor" placeholder="e.g., George Orwell">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="newBookCategory">
+                        <option value="Novel">Novel</option>
+                        <option value="Textbook">Textbook</option>
+                        <option value="Reference">Reference</option>
+                        <option value="Science">Science</option>
+                        <option value="History">History</option>
+                        <option value="Religion">Religion</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" id="newBookQty" value="1" min="1">
+                </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;margin-top:20px;padding:16px;font-size:1rem;" onclick="addBook()">
+                Add Book to Library
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="changePinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔐 Change PIN</h2>
+                <button class="close-btn" onclick="closeModal('changePinModal')">&times;</button>
+            </div>
+            <div style="text-align:center;margin-bottom:20px;">
+                <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:10px;" id="changePinStep">Enter current PIN</div>
+                <div style="font-size:2rem;font-weight:700;letter-spacing:10px;color:var(--primary);min-height:40px;" id="changePinDisplay">_ _ _ _</div>
+            </div>
+            <div class="pin-pad" style="max-width:280px;margin:0 auto;">
+                <button class="pin-key" onclick="changePinDigit(1)">1</button>
+                <button class="pin-key" onclick="changePinDigit(2)">2</button>
+                <button class="pin-key" onclick="changePinDigit(3)">3</button>
+                <button class="pin-key" onclick="changePinDigit(4)">4</button>
+                <button class="pin-key" onclick="changePinDigit(5)">5</button>
+                <button class="pin-key" onclick="changePinDigit(6)">6</button>
+                <button class="pin-key" onclick="changePinDigit(7)">7</button>
+                <button class="pin-key" onclick="changePinDigit(8)">8</button>
+                <button class="pin-key" onclick="changePinDigit(9)">9</button>
+                <button class="pin-key" onclick="changePinClear()">⌫</button>
+                <button class="pin-key" onclick="changePinDigit(0)">0</button>
+                <button class="pin-key" onclick="changePinSubmit()">✓</button>
+            </div>
+            <div class="pin-error-msg" id="changePinError" style="text-align:center;"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const DEFAULT_PIN = "0000";
+        let currentPin = localStorage.getItem('libPIN') || DEFAULT_PIN;
+        let pinInput = "";
+        let changePinInput = "";
+        let changePinStep = 1;
+        let newPinTemp = "";
+        let isLocked = true;
+
+        function initPin() {
+            if (!localStorage.getItem('libPIN')) {
+                localStorage.setItem('libPIN', DEFAULT_PIN);
+                currentPin = DEFAULT_PIN;
+            }
+            lockApp();
+        }
+
+        function lockApp() {
+            isLocked = true;
+            const overlay = document.getElementById('pinOverlay');
+            const mainApp = document.getElementById('mainApp');
+            overlay.classList.remove('hidden');
+            overlay.style.opacity = '1';
+            mainApp.classList.add('hidden');
+            mainApp.style.display = 'none';
+            document.body.classList.add('locked');
+            resetPinInput();
+        }
+
+        function resetPinInput() {
+            pinInput = "";
+            updatePinDisplay();
+            document.getElementById('pinErrorMsg').textContent = "";
+        }
+
+        function updatePinDisplay() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById('dot' + i);
+                dot.classList.toggle('filled', i < pinInput.length);
+                dot.classList.remove('error');
+            }
+        }
+
+        function enterDigit(d) {
+            if (pinInput.length < 4) {
+                pinInput += d;
+                updatePinDisplay();
+            }
+            if (pinInput.length === 4) setTimeout(submitPin, 150);
+        }
+
+        function clearPin() {
+            pinInput = pinInput.slice(0, -1);
+            updatePinDisplay();
+            document.getElementById('pinErrorMsg').textContent = "";
+        }
+
+        function submitPin() {
+            if (pinInput.length !== 4) {
+                showPinError("Enter 4 digits");
+                return;
+            }
+            if (pinInput === currentPin) {
+                unlockApp();
+            } else {
+                showPinError("Wrong PIN. Try again.");
+                pinInput = "";
+                updatePinDisplay();
+                for (let i = 0; i < 4; i++) document.getElementById('dot' + i).classList.add('error');
+                setTimeout(() => {
+                    for (let i = 0; i < 4; i++) document.getElementById('dot' + i).classList.remove('error');
+                }, 500);
+            }
+        }
+
+        function showPinError(msg) {
+            document.getElementById('pinErrorMsg').textContent = msg;
+        }
+
+        function unlockApp() {
+            const overlay = document.getElementById('pinOverlay');
+            const mainApp = document.getElementById('mainApp');
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.2s ease';
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                overlay.style.opacity = '';
+                overlay.style.transition = '';
+                mainApp.classList.remove('hidden');
+                mainApp.style.display = 'block';
+                document.body.classList.remove('locked');
+                void mainApp.offsetHeight;
+                isLocked = false;
+                renderBooks();
+                renderReturnList();
+                renderOverdue();
+                renderStudents();
+                updateStats();
+            }, 200);
+        }
+
+        function forgotPin() {
+            if (confirm("Reset PIN to default (0000)? All library data will be kept.")) {
+                currentPin = DEFAULT_PIN;
+                localStorage.setItem('libPIN', DEFAULT_PIN);
+                showPinError("PIN reset to 0000. Enter to unlock.");
+                pinInput = "";
+                updatePinDisplay();
+            }
+        }
+
+        function openChangePinModal() {
+            changePinStep = 1;
+            changePinInput = "";
+            newPinTemp = "";
+            updateChangePinDisplay();
+            document.getElementById('changePinStep').textContent = "Enter current PIN";
+            document.getElementById('changePinError').textContent = "";
+            openModal('changePinModal');
+        }
+
+        function updateChangePinDisplay() {
+            let d = "";
+            for (let i = 0; i < 4; i++) d += (i < changePinInput.length) ? "● " : "_ ";
+            document.getElementById('changePinDisplay').textContent = d.trim();
+        }
+
+        function changePinDigit(d) {
+            if (changePinInput.length < 4) {
+                changePinInput += d;
+                updateChangePinDisplay();
+            }
+            if (changePinInput.length === 4) setTimeout(changePinSubmit, 150);
+        }
+
+        function changePinClear() {
+            changePinInput = changePinInput.slice(0, -1);
+            updateChangePinDisplay();
+            document.getElementById('changePinError').textContent = "";
+        }
+
+        function changePinSubmit() {
+            if (changePinInput.length !== 4) {
+                document.getElementById('changePinError').textContent = "Enter 4 digits";
+                return;
+            }
+            if (changePinStep === 1) {
+                if (changePinInput === currentPin) {
+                    changePinStep = 2;
+                    changePinInput = "";
+                    updateChangePinDisplay();
+                    document.getElementById('changePinStep').textContent = "Enter NEW PIN";
+                } else {
+                    document.getElementById('changePinError').textContent = "Wrong PIN";
+                    changePinInput = "";
+                    updateChangePinDisplay();
+                }
+            } else if (changePinStep === 2) {
+                if (changePinInput === currentPin) {
+                    document.getElementById('changePinError').textContent = "Must be different";
+                    changePinInput = "";
+                    updateChangePinDisplay();
+                    return;
+                }
+                newPinTemp = changePinInput;
+                changePinStep = 3;
+                changePinInput = "";
+                updateChangePinDisplay();
+                document.getElementById('changePinStep').textContent = "Confirm NEW PIN";
+            } else if (changePinStep === 3) {
+                if (changePinInput === newPinTemp) {
+                    currentPin = newPinTemp;
+                    localStorage.setItem('libPIN', currentPin);
+                    closeModal('changePinModal');
+                    showToast("PIN changed!");
+                } else {
+                    document.getElementById('changePinError').textContent = "PINs don't match. Start over.";
+                    changePinStep = 1;
+                    changePinInput = "";
+                    newPinTemp = "";
+                    updateChangePinDisplay();
+                    document.getElementById('changePinStep').textContent = "Enter current PIN";
+                }
+            }
+        }
+
+        let books = JSON.parse(localStorage.getItem('libBooks')) || [];
+        let transactions = JSON.parse(localStorage.getItem('libTransactions')) || [];
+
+        function saveData() {
+            localStorage.setItem('libBooks', JSON.stringify(books));
+            localStorage.setItem('libTransactions', JSON.stringify(transactions));
+            updateStats();
+        }
+
+        function genId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
+        }
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.background = type === 'error' ? 'var(--danger)' : 'var(--text)';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function escapeHtml(t) {
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('section-' + tab).classList.add('active');
+            if (tab === 'books') renderBooks();
+            if (tab === 'return') renderReturnList();
+            if (tab === 'overdue') renderOverdue();
+            if (tab === 'students') renderStudents();
+        }
+
+        function updateStats() {
+            const total = books.reduce((s, b) => s + (b.qty || 1), 0);
+            const borrowed = transactions.filter(t => !t.returned).length;
+            const overdue = transactions.filter(t => !t.returned && new Date(t.dueDate) < new Date()).length;
+            const borrowers = [...new Set(transactions.filter(t => !t.returned).map(t => t.studentId))].length;
+            document.getElementById('statTotalBooks').textContent = total;
+            document.getElementById('statBorrowed').textContent = borrowed;
+            document.getElementById('statOverdue').textContent = overdue;
+            document.getElementById('statBorrowers').textContent = borrowers;
+        }
+
+        function deleteBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            const borrowedCount = transactions.filter(t => t.bookId === bookId && !t.returned).length;
+            if (borrowedCount > 0) {
+                showToast(`Cannot delete: ${borrowedCount} copy(s) still borrowed!`, 'error');
+                return;
+            }
+            if (!confirm(`Delete "${book.title}" by ${book.author}?\n\nThis cannot be undone.`)) return;
+            books = books.filter(b => b.id !== bookId);
+            saveData();
+            renderBooks();
+            showToast(`"${book.title}" deleted from library`);
+        }
+
+        function renderBooks() {
+            const search = document.getElementById('bookSearch').value.toLowerCase();
+            const container = document.getElementById('booksTable');
+            let filtered = books.filter(b => {
+                return (b.title + b.author + b.category).toLowerCase().includes(search);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📚</div>
+                        <h3>No books yet</h3>
+                        <p>Add books to your library collection</p>
+                        <button class="btn btn-primary" style="margin-top:16px;" onclick="openModal('addBookModal')">+ Add First Book</button>
+                    </div>`;
+                return;
+            }
+
+            let html = `<div class="book-grid">`;
+            filtered.sort((a, b) => a.title.localeCompare(b.title)).forEach(book => {
+                const borrowedCount = transactions.filter(t => t.bookId === book.id && !t.returned).length;
+                const available = (book.qty || 1) - borrowedCount;
+                const statusClass = available > 0 ? 'status-available' : 'status-borrowed';
+                const statusText = available > 0 ? 'Available' : 'All Borrowed';
+                html += `
+                    <div class="book-card" onclick="prefillBorrow('${book.id}')">
+                        <div class="book-icon">📖</div>
+                        <h4>${escapeHtml(book.title)}</h4>
+                        <div class="author">by ${escapeHtml(book.author)}</div>
+                        <div class="meta-row">
+                            <span class="category-tag">${escapeHtml(book.category)}</span>
+                            <span class="qty">${available}/${book.qty || 1} left</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="status-pill ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();prefillBorrow('${book.id}')">Check Out</button>
+                            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteBook('${book.id}')">Delete</button>
+                        </div>
+                    </div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function addBook() {
+            const title = document.getElementById('newBookTitle').value.trim();
+            const author = document.getElementById('newBookAuthor').value.trim();
+            const category = document.getElementById('newBookCategory').value;
+            const qty = parseInt(document.getElementById('newBookQty').value) || 1;
+            if (!title || !author) {
+                showToast('Title and author required', 'error');
+                return;
+            }
+            books.push({ id: genId(), title, author, category, qty, added: new Date().toISOString() });
+            saveData();
+            document.getElementById('newBookTitle').value = '';
+            document.getElementById('newBookAuthor').value = '';
+            document.getElementById('newBookQty').value = '1';
+            closeModal('addBookModal');
+            showToast(`Added "${title}"`);
+            renderBooks();
+        }
+
+        function prefillBorrow(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            switchTab('borrow');
+            document.getElementById('borrowBookTitle').value = book.title;
+            document.getElementById('borrowAuthor').value = book.author;
+        }
+
+        function toggleBorrowerFields() {
+            const type = document.getElementById('borrowerType').value;
+            const classGroup = document.getElementById('studentClassGroup');
+            const deptGroup = document.getElementById('teacherDeptGroup');
+            const nameLabel = document.getElementById('borrowerNameLabel');
+
+            if (type === 'teacher') {
+                classGroup.style.display = 'none';
+                deptGroup.style.display = 'block';
+                nameLabel.textContent = 'Teacher Name *';
+                document.getElementById('borrowStudent').placeholder = 'e.g., Mr. Ochieng';
+            } else {
+                classGroup.style.display = 'block';
+                deptGroup.style.display = 'none';
+                nameLabel.textContent = 'Student Name *';
+                document.getElementById('borrowStudent').placeholder = 'e.g., John Okello';
+            }
+        }
+
+        function checkOutBook() {
+            const type = document.getElementById('borrowerType').value;
+            const name = document.getElementById('borrowStudent').value.trim();
+            const cls = document.getElementById('borrowClass').value;
+            const dept = document.getElementById('teacherDept').value.trim();
+            const title = document.getElementById('borrowBookTitle').value.trim();
+            const author = document.getElementById('borrowAuthor').value.trim();
+            const days = parseInt(document.getElementById('borrowDays').value);
+            const qty = parseInt(document.getElementById('borrowQty').value) || 1;
+
+            if (!name) {
+                showToast(type === 'teacher' ? 'Enter teacher name' : 'Enter student name', 'error');
+                return;
+            }
+            if (type === 'student' && !cls) {
+                showToast('Select a class', 'error');
+                return;
+            }
+            if (!title) {
+                showToast('Enter book title', 'error');
+                return;
+            }
+            if (!days || days < 1) {
+                showToast('Enter valid number of days', 'error');
+                return;
+            }
+            if (qty < 1 || qty > 10) {
+                showToast('Quantity must be 1-10', 'error');
+                return;
+            }
+
+            let book = books.find(b => b.title.toLowerCase() === title.toLowerCase());
+            if (!book) {
+                book = { id: genId(), title, author: author || 'Unknown', category: 'Other', qty: qty, added: new Date().toISOString() };
+                books.push(book);
+            }
+
+            const borrowedCount = transactions.filter(t => t.bookId === book.id && !t.returned).length;
+            const available = (book.qty || 1) - borrowedCount;
+
+            if (qty > available) {
+                showToast(`Only ${available} copy(s) available!`, 'error');
+                return;
+            }
+
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + days);
+
+            const borrowerId = type === 'teacher' ? 'T_' + name + '_' + dept : name + '_' + cls;
+            const borrowerClass = type === 'teacher' ? (dept || 'Staff') : cls;
+
+            for (let i = 0; i < qty; i++) {
+                transactions.push({
+                    id: genId(),
+                    bookId: book.id,
+                    bookTitle: book.title,
+                    bookAuthor: book.author,
+                    studentName: name,
+                    studentClass: borrowerClass,
+                    studentId: borrowerId,
+                    borrowerType: type,
+                    borrowedDate: new Date().toISOString(),
+                    dueDate: dueDate.toISOString(),
+                    returned: false,
+                    returnedDate: null
+                });
+            }
+
+            saveData();
+            document.getElementById('borrowStudent').value = '';
+            document.getElementById('borrowClass').value = '';
+            document.getElementById('teacherDept').value = '';
+            document.getElementById('borrowBookTitle').value = '';
+            document.getElementById('borrowAuthor').value = '';
+            document.getElementById('borrowDays').value = '14';
+            document.getElementById('borrowQty').value = '1';
+            showToast(`Checked out ${qty} copy(s) to ${name}`);
+            renderBooks();
+        }
+
+        function renderReturnList() {
+            const search = document.getElementById('returnSearch').value.toLowerCase();
+            const container = document.getElementById('returnTable');
+            let active = transactions.filter(t => !t.returned);
+            if (search) {
+                active = active.filter(t =>
+                    (t.bookTitle + t.studentName + t.studentClass).toLowerCase().includes(search)
+                );
+            }
+
+            if (active.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📥</div>
+                        <h3>No borrowed books</h3>
+                        <p>All books are in the library</p>
+                    </div>`;
+                return;
+            }
+
+            const groups = {};
+            active.forEach(t => {
+                const key = t.bookId + '_' + t.studentId;
+                if (!groups[key]) {
+                    groups[key] = {
+                        bookTitle: t.bookTitle,
+                        bookAuthor: t.bookAuthor,
+                        studentName: t.studentName,
+                        studentClass: t.studentClass,
+                        borrowerType: t.borrowerType,
+                        dueDate: t.dueDate,
+                        ids: []
+                    };
+                }
+                groups[key].ids.push(t.id);
+            });
+
+            let grouped = Object.values(groups);
+            grouped.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+            let html = `<div class="table-wrap"><table><thead><tr>
+                <th>Book</th><th>Borrower</th><th>Qty</th><th>Due Date</th><th>Days Left</th><th>Action</th>
+            </tr></thead><tbody>`;
+
+            grouped.forEach(g => {
+                const due = new Date(g.dueDate);
+                const now = new Date();
+                const diff = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+                const isOverdue = diff < 0;
+                const daysClass = isOverdue ? 'urgent' : (diff <= 2 ? 'urgent' : '');
+                const daysText = isOverdue ? `${Math.abs(diff)} days overdue` : `${diff} days left`;
+                const dueClass = isOverdue ? 'overdue' : '';
+                const typeIcon = g.borrowerType === 'teacher' ? '👨‍🏫' : '👨‍🎓';
+                const qty = g.ids.length;
+                const idsJson = JSON.stringify(g.ids).replace(/"/g, '&quot;');
+
+                html += `<tr>
+                    <td><div class="book-title-cell">${escapeHtml(g.bookTitle)}</div><div class="book-author-cell">${escapeHtml(g.bookAuthor)}</div></td>
+                    <td><strong>${typeIcon} ${escapeHtml(g.studentName)}</strong><br><span class="book-author-cell">${escapeHtml(g.studentClass)}</span></td>
+                    <td><span style="background:var(--primary-light);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:0.85rem;font-weight:700;">${qty}</span></td>
+                    <td class="due-text ${dueClass}">${due.toLocaleDateString('en-UG')}</td>
+                    <td><span class="days-tag ${daysClass}">${daysText}</span></td>
+                    <td><button class="btn btn-success btn-sm" onclick="returnBooks(${idsJson})">📥 Return</button></td>
+                </tr>`;
+            });
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        function returnBooks(ids) {
+            if (!Array.isArray(ids)) ids = [ids];
+            let returnedCount = 0;
+            let bookTitle = '';
+            let studentName = '';
+            ids.forEach(id => {
+                const t = transactions.find(x => x.id === id);
+                if (t && !t.returned) {
+                    t.returned = true;
+                    t.returnedDate = new Date().toISOString();
+                    returnedCount++;
+                    bookTitle = t.bookTitle;
+                    studentName = t.studentName;
+                }
+            });
+            if (returnedCount > 0) {
+                saveData();
+                showToast(`Returned ${returnedCount} copy(s) of "${bookTitle}" from ${studentName}`);
+                renderReturnList();
+                renderBooks();
+                renderOverdue();
+                renderStudents();
+            }
+        }
+
+        function renderOverdue() {
+            const container = document.getElementById('overdueTable');
+            const overdue = transactions.filter(t => !t.returned && new Date(t.dueDate) < new Date());
+
+            if (overdue.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🎉</div>
+                        <h3>No overdue books!</h3>
+                        <p>All borrowed books are within due date</p>
+                    </div>`;
+                return;
+            }
+
+            let html = `<div class="table-wrap"><table><thead><tr>
+                <th>Book</th><th>Borrower</th><th>Due Date</th><th>Days Overdue</th><th>Action</th>
+            </tr></thead><tbody>`;
+
+            const overdueGroups = {};
+            overdue.forEach(t => {
+                const key = t.bookId + '_' + t.studentId;
+                if (!overdueGroups[key]) {
+                    overdueGroups[key] = {
+                        bookTitle: t.bookTitle,
+                        bookAuthor: t.bookAuthor,
+                        studentName: t.studentName,
+                        studentClass: t.studentClass,
+                        borrowerType: t.borrowerType,
+                        dueDate: t.dueDate,
+                        ids: []
+                    };
+                }
+                overdueGroups[key].ids.push(t.id);
+            });
+
+            let groupedOverdue = Object.values(overdueGroups);
+            groupedOverdue.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+            groupedOverdue.forEach(g => {
+                const due = new Date(g.dueDate);
+                const now = new Date();
+                const daysOver = Math.ceil((now - due) / (1000 * 60 * 60 * 24));
+                const typeIcon = g.borrowerType === 'teacher' ? '👨‍🏫' : '👨‍🎓';
+                const qty = g.ids.length;
+                const idsJson = JSON.stringify(g.ids).replace(/"/g, '&quot;');
+
+                html += `<tr>
+                    <td><div class="book-title-cell">${escapeHtml(g.bookTitle)}</div><div class="book-author-cell">${escapeHtml(g.bookAuthor)}</div></td>
+                    <td><strong>${typeIcon} ${escapeHtml(g.studentName)}</strong><br><span class="book-author-cell">${escapeHtml(g.studentClass)}</span></td>
+                    <td class="due-text overdue">${due.toLocaleDateString('en-UG')}</td>
+                    <td><span class="days-tag urgent">${daysOver} days</span> <span style="background:var(--danger-light);color:var(--danger);padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:700;">×${qty}</span></td>
+                    <td><button class="btn btn-success btn-sm" onclick="returnBooks(${idsJson})">📥 Return</button></td>
+                </tr>`;
+            });
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        function renderStudents() {
+            const search = document.getElementById('studentSearch').value.toLowerCase();
+            const container = document.getElementById('studentsTable');
+
+            const studentMap = {};
+            transactions.filter(t => !t.returned).forEach(t => {
+                const key = t.studentId;
+                if (!studentMap[key]) {
+                    studentMap[key] = { 
+                        name: t.studentName, 
+                        class: t.studentClass, 
+                        type: t.borrowerType || 'student',
+                        books: [] 
+                    };
+                }
+                studentMap[key].books.push(t);
+            });
+
+            let borrowers = Object.entries(studentMap).map(([id, data]) => ({ id, ...data }));
+            if (search) {
+                borrowers = borrowers.filter(s => (s.name + s.class).toLowerCase().includes(search));
+            }
+
+            if (borrowers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">👤</div>
+                        <h3>No active borrowers</h3>
+                        <p>No one currently has borrowed books</p>
+                    </div>`;
+                return;
+            }
+
+            let html = `<div class="table-wrap"><table><thead><tr>
+                <th>Borrower</th><th>Type</th><th>Class/Dept</th><th>Books</th><th>Due Soonest</th><th>Actions</th>
+            </tr></thead><tbody>`;
+
+            borrowers.sort((a, b) => a.name.localeCompare(b.name)).forEach(s => {
+                const soonest = s.books.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))[0];
+                const due = new Date(soonest.dueDate);
+                const isOverdue = due < new Date();
+                const dueClass = isOverdue ? 'overdue' : '';
+                const typeIcon = s.type === 'teacher' ? '👨‍🏫' : '👨‍🎓';
+                const typeLabel = s.type === 'teacher' ? 'Teacher' : 'Student';
+                const typeColor = s.type === 'teacher' ? 'var(--warning)' : 'var(--primary)';
+                const typeBg = s.type === 'teacher' ? 'var(--warning-light)' : 'var(--primary-light)';
+
+                html += `<tr>
+                    <td><strong>${escapeHtml(s.name)}</strong></td>
+                    <td><span style="background:${typeBg};color:${typeColor};padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;">${typeIcon} ${typeLabel}</span></td>
+                    <td><span style="background:var(--bg);padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;color:var(--text-muted);">${escapeHtml(s.class)}</span></td>
+                    <td>${s.books.length} book${s.books.length > 1 ? 's' : ''}</td>
+                    <td class="due-text ${dueClass}">${due.toLocaleDateString('en-UG')}</td>
+                    <td><button class="btn btn-ghost btn-sm" onclick="viewStudentBooks('${s.id}')">View Books</button></td>
+                </tr>`;
+            });
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        function viewStudentBooks(studentId) {
+            const studentBooks = transactions.filter(t => t.studentId === studentId && !t.returned);
+            if (studentBooks.length === 0) return;
+            const student = studentBooks[0];
+            let msg = `📚 ${student.studentName} (${student.studentClass}) has ${studentBooks.length} book(s):\n\n`;
+            studentBooks.forEach((t, i) => {
+                const due = new Date(t.dueDate);
+                const status = due < new Date() ? '⚠️ OVERDUE' : `Due: ${due.toLocaleDateString('en-UG')}`;
+                msg += `${i+1}. "${t.bookTitle}" by ${t.bookAuthor}\n   ${status}\n\n`;
+            });
+            alert(msg);
+        }
+
+        function exportData() {
+            const data = { books, transactions, exported: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `library-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Library data exported!');
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!data.books || !Array.isArray(data.books) || !data.transactions || !Array.isArray(data.transactions)) {
+                        throw new Error('Invalid format');
+                    }
+
+                    const bookIds = new Set(data.books.map(b => b.id));
+                    const orphanTransactions = data.transactions.filter(t => !bookIds.has(t.bookId));
+
+                    if (orphanTransactions.length > 0) {
+                        if (!confirm(`Warning: ${orphanTransactions.length} transactions reference missing books. Import anyway? (Orphan transactions will be skipped)`)) {
+                            input.value = '';
+                            return;
+                        }
+                        data.transactions = data.transactions.filter(t => bookIds.has(t.bookId));
+                    }
+
+                    if (confirm(`Import ${data.books.length} books and ${data.transactions.length} transactions?`)) {
+                        books = data.books;
+                        transactions = data.transactions;
+                        saveData();
+                        renderBooks();
+                        renderReturnList();
+                        renderOverdue();
+                        renderStudents();
+                        showToast('Data imported!');
+                    }
+                } catch (err) {
+                    showToast('Invalid file: ' + err.message, 'error');
+                }
+                input.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        document.querySelectorAll('.modal').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+            }
+            if (isLocked) {
+                if (e.key >= '0' && e.key <= '9') { e.preventDefault(); enterDigit(e.key); }
+                else if (e.key === 'Backspace') { e.preventDefault(); clearPin(); }
+                else if (e.key === 'Enter') { e.preventDefault(); submitPin(); }
+            }
+        });
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('lib_dark', document.body.classList.contains('dark-mode'));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('lib_dark') === 'true') document.body.classList.add('dark-mode');
+            initPin();
+        });
+    </script>
+</body>
+</html>
