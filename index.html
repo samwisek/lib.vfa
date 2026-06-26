@@ -721,8 +721,11 @@
                 <button class="pin-key" ontouchstart="event.preventDefault();enterDigit(0)" onclick="enterDigit(0)">0</button>
                 <button class="pin-key" ontouchstart="event.preventDefault();submitPin()" onclick="submitPin()">✓</button>
             </div>
-            <div class="pin-actions">
+            <div class="pin-actions" style="gap:8px;flex-wrap:wrap;margin-bottom:12px;">
                 <button class="btn btn-ghost btn-sm" onclick="forgotPin()">Forgot PIN?</button>
+                <button class="btn btn-primary btn-sm" onclick="submitPin()" style="min-width:80px;">↵ Enter</button>
+                <button class="btn btn-ghost btn-sm" onclick="resetPinInput()">⌫ Clear All</button>
+                <button class="btn btn-ghost btn-sm" onclick="enterDigit(0);enterDigit(0);enterDigit(0);enterDigit(0);">0000</button>
             </div>
             <div class="pin-error-msg" id="pinErrorMsg"></div>
         </div>
@@ -739,12 +742,14 @@
                     </div>
                 </div>
                 <div class="header-actions no-print">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addBookModal')">➕ Add Book</button>
-                    <button class="btn btn-ghost btn-sm" onclick="toggleDarkMode()">🌙</button>
-                    <button class="btn btn-ghost btn-sm" onclick="openChangePinModal()">🔐 PIN</button>
-                    <button class="btn btn-ghost btn-sm" onclick="lockApp()">🔒 Lock</button>
-                    <button class="btn btn-ghost btn-sm" onclick="exportData()">📥 Export</button>
-                    <div style="position:relative;overflow:hidden;display:inline-block;" class="btn btn-ghost btn-sm">
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addBookModal')" title="Add Book (+)">➕ Add Book</button>
+                    <button class="btn btn-ghost btn-sm" onclick="switchTab('borrow')" title="Check Out (B)">📤 Borrow</button>
+                    <button class="btn btn-ghost btn-sm" onclick="switchTab('return')" title="Return (R)">📥 Return</button>
+                    <button class="btn btn-ghost btn-sm" onclick="toggleDarkMode()" title="Dark Mode (D)">🌙</button>
+                    <button class="btn btn-ghost btn-sm" onclick="openChangePinModal()" title="Change PIN (P)">🔐 PIN</button>
+                    <button class="btn btn-ghost btn-sm" onclick="lockApp()" title="Lock Screen (L)">🔒 Lock</button>
+                    <button class="btn btn-ghost btn-sm" onclick="exportData()" title="Export Data (E)">📥 Export</button>
+                    <div style="position:relative;overflow:hidden;display:inline-block;" class="btn btn-ghost btn-sm" title="Import Data (I)">
                         📤 Import
                         <input type="file" accept=".json" onchange="importData(this)" style="position:absolute;left:0;top:0;opacity:0;cursor:pointer;width:100%;height:100%;">
                     </div>
@@ -952,6 +957,48 @@
     </div>
 
     <div class="toast" id="toast"></div>
+
+    <!-- Floating Help Button -->
+    <button class="shortcut-help-btn" onclick="toggleShortcutsPanel()" title="Keyboard Shortcuts (?)" style="position:fixed;bottom:20px;left:20px;z-index:999;width:48px;height:48px;border-radius:50%;background:var(--primary);color:white;border:none;cursor:pointer;font-size:1.2rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+        ⌨️
+    </button>
+
+    <!-- Shortcuts Panel -->
+    <div id="shortcutsPanel" style="display:none;position:fixed;bottom:80px;left:20px;z-index:998;background:var(--surface-solid);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-lg);max-width:320px;backdrop-filter:blur(20px);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h3 style="font-size:1rem;font-weight:700;">⌨️ Keyboard Shortcuts</h3>
+            <button onclick="toggleShortcutsPanel()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-muted);">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.85rem;">
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">1-5</span> Switch Tabs</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">B</span> Check Out</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">R</span> Return</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">O</span> Overdue</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">S</span> Students</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">+ / A</span> Add Book</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">E</span> Export</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">D</span> Dark Mode</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">P</span> Change PIN</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">L</span> Lock Screen</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">/</span> Search</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">Esc</span> Close Modals</div>
+            <div><span style="background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;">?</span> This Help</div>
+        </div>
+    </div>
+
+    <script>
+    function toggleShortcutsPanel() {
+        const panel = document.getElementById('shortcutsPanel');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+    // Add ? key to toggle shortcuts panel
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '?' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            toggleShortcutsPanel();
+        }
+    });
+    </script>
 
     <script>
         const DEFAULT_PIN = "0000";
@@ -1395,6 +1442,7 @@
                 return;
             }
 
+            // Group by book+borrower to avoid duplicates
             const groups = {};
             active.forEach(t => {
                 const key = t.bookId + '_' + t.studentId;
@@ -1487,6 +1535,7 @@
                 <th>Book</th><th>Borrower</th><th>Due Date</th><th>Days Overdue</th><th>Action</th>
             </tr></thead><tbody>`;
 
+            // Group overdue by book+borrower
             const overdueGroups = {};
             overdue.forEach(t => {
                 const key = t.bookId + '_' + t.studentId;
@@ -1622,10 +1671,11 @@
                     if (!data.books || !Array.isArray(data.books) || !data.transactions || !Array.isArray(data.transactions)) {
                         throw new Error('Invalid format');
                     }
-
+                    
+                    // Validate: check that all transaction bookIds exist in books
                     const bookIds = new Set(data.books.map(b => b.id));
                     const orphanTransactions = data.transactions.filter(t => !bookIds.has(t.bookId));
-
+                    
                     if (orphanTransactions.length > 0) {
                         if (!confirm(`Warning: ${orphanTransactions.length} transactions reference missing books. Import anyway? (Orphan transactions will be skipped)`)) {
                             input.value = '';
@@ -1633,7 +1683,7 @@
                         }
                         data.transactions = data.transactions.filter(t => bookIds.has(t.bookId));
                     }
-
+                    
                     if (confirm(`Import ${data.books.length} books and ${data.transactions.length} transactions?`)) {
                         books = data.books;
                         transactions = data.transactions;
@@ -1667,13 +1717,43 @@
         });
 
         document.addEventListener('keydown', function(e) {
+            // Escape closes modals
             if (e.key === 'Escape') {
                 document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+                return;
             }
+
+            // PIN pad shortcuts when locked
             if (isLocked) {
                 if (e.key >= '0' && e.key <= '9') { e.preventDefault(); enterDigit(e.key); }
                 else if (e.key === 'Backspace') { e.preventDefault(); clearPin(); }
                 else if (e.key === 'Enter') { e.preventDefault(); submitPin(); }
+                return;
+            }
+
+            // Global shortcuts when unlocked (only if not typing in an input)
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
+            const key = e.key.toLowerCase();
+            switch(key) {
+                case '1': switchTab('books'); break;
+                case '2': switchTab('borrow'); break;
+                case '3': switchTab('return'); break;
+                case '4': switchTab('overdue'); break;
+                case '5': switchTab('students'); break;
+                case 'b': switchTab('borrow'); break;
+                case 'r': switchTab('return'); break;
+                case 'o': switchTab('overdue'); break;
+                case 's': switchTab('students'); break;
+                case 'l': lockApp(); break;
+                case '+': case 'a': openModal('addBookModal'); break;
+                case 'e': exportData(); break;
+                case 'd': toggleDarkMode(); break;
+                case 'p': openChangePinModal(); break;
+                case '/': 
+                    e.preventDefault();
+                    document.getElementById('bookSearch').focus();
+                    break;
             }
         });
 
