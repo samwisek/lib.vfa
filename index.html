@@ -689,6 +689,323 @@
             .book-grid { grid-template-columns: 1fr; }
             .pin-box { padding: 32px 24px; }
         }
+        /* ===== NEW ENHANCED STYLES ===== */
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-particles span {
+            position: absolute;
+            display: block;
+            width: 20px; height: 20px;
+            background: rgba(14,165,233,0.03);
+            border-radius: 50%;
+            animation: floatUp 25s linear infinite;
+            bottom: -100px;
+        }
+        .bg-particles span:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-particles span:nth-child(2) { left: 20%; width: 40px; height: 40px; animation-delay: 2s; animation-duration: 20s; }
+        .bg-particles span:nth-child(3) { left: 35%; width: 60px; height: 60px; animation-delay: 4s; }
+        .bg-particles span:nth-child(4) { left: 50%; width: 30px; height: 30px; animation-delay: 0s; animation-duration: 18s; }
+        .bg-particles span:nth-child(5) { left: 65%; width: 50px; height: 50px; animation-delay: 3s; }
+        .bg-particles span:nth-child(6) { left: 80%; width: 70px; height: 70px; animation-delay: 7s; }
+        .bg-particles span:nth-child(7) { left: 90%; width: 35px; height: 35px; animation-delay: 5s; }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(720deg); opacity: 0; }
+        }
+        body.dark-mode .bg-particles span {
+            background: rgba(56,189,248,0.04);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+
+        /* Loading shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, var(--bg) 25%, var(--surface) 50%, var(--bg) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Badge/Tag styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .badge-damaged { background: #fef3c7; color: #92400e; }
+        .badge-repair { background: #dbeafe; color: #1e40af; }
+        .badge-discard { background: #fee2e2; color: #991b1b; }
+        body.dark-mode .badge-damaged { background: rgba(245,158,11,0.2); color: #fbbf24; }
+        body.dark-mode .badge-repair { background: rgba(59,130,246,0.2); color: #60a5fa; }
+        body.dark-mode .badge-discard { background: rgba(239,68,68,0.2); color: #f87171; }
+
+        /* Mini chart bars */
+        .mini-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 40px;
+            padding: 4px 0;
+        }
+        .mini-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary), #38bdf8);
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+        .mini-bar:hover {
+            opacity: 0.8;
+        }
+        .mini-bar.danger-bar { background: linear-gradient(to top, var(--danger), #f87171); }
+        .mini-bar.success-bar { background: linear-gradient(to top, var(--success), #4ade80); }
+        .mini-bar.warning-bar { background: linear-gradient(to top, var(--warning), #fbbf24); }
+
+        /* Activity timeline */
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+        .timeline-item {
+            position: relative;
+            padding: 12px 0;
+            padding-left: 16px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 18px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--surface-solid);
+        }
+        .timeline-item.borrow::before { background: var(--warning); }
+        .timeline-item.return::before { background: var(--success); }
+        .timeline-item.damaged::before { background: var(--danger); }
+        .timeline-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .timeline-text {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-top: 2px;
+        }
+
+        /* Damaged book card */
+        .damage-card {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .damage-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .damage-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--warning);
+        }
+        .damage-card.status-repair::after { background: var(--primary); }
+        .damage-card.status-discard::after { background: var(--danger); }
+
+        /* Progress ring */
+        .progress-ring {
+            position: relative;
+            width: 60px; height: 60px;
+        }
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 6;
+        }
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        .progress-ring-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /* Floating action button */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(14,165,233,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 99;
+        }
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 30px rgba(14,165,233,0.5);
+        }
+
+        /* Tooltip */
+        [data-tooltip] {
+            position: relative;
+        }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+        [data-tooltip]:hover::after {
+            opacity: 1;
+            bottom: 130%;
+        }
+
+        /* Confetti animation for success */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        .confetti {
+            position: fixed;
+            width: 10px; height: 10px;
+            border-radius: 2px;
+            z-index: 9999;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        /* Smooth page transitions */
+        .section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: none;
+        }
+
+        /* Notification bell */
+        .notif-bell {
+            position: relative;
+            cursor: pointer;
+        }
+        .notif-badge {
+            position: absolute;
+            top: -4px; right: -4px;
+            width: 18px; height: 18px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.65rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        /* Glass morphism enhancement */
+        .glass-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(14,165,233,0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .container { padding: 12px; }
+            .header-wrap { padding: 12px 12px 0; }
+            .tab-bar-wrap { padding: 8px 12px 0; top: 80px; }
+            header { padding: 12px 16px; }
+            .tab-btn { padding: 8px 14px; font-size: 0.85rem; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .glass-card { padding: 20px; }
+            .book-grid { grid-template-columns: 1fr; }
+            .pin-box { padding: 32px 24px; }
+            .fab { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 1.2rem; }
+        }
         @media print {
             .no-print { display: none !important; }
         }
@@ -696,6 +1013,11 @@
 <base target="_blank">
 </head>
 <body>
+    <!-- Animated Background Particles -->
+    <div class="bg-particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
     <div class="pin-overlay" id="pinOverlay">
         <div class="pin-box">
             <div style="font-size: 3.5rem; margin-bottom: 12px;">📚</div>
@@ -741,6 +1063,10 @@
                         <span>Book Management System</span>
                     </div>
                 </div>
+                <div class="notif-bell no-print" onclick="showNotifications()" data-tooltip="Notifications" style="margin-left:auto;margin-right:12px;">
+                    <span style="font-size:1.4rem;">🔔</span>
+                    <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+                </div>
                 <div class="header-actions no-print">
                     <button class="btn btn-primary btn-sm" onclick="openModal('addBookModal')" title="Add Book (+)">➕ Add Book</button>
                     <button class="btn btn-ghost btn-sm" onclick="switchTab('borrow')" title="Check Out (B)">📤 Borrow</button>
@@ -764,26 +1090,48 @@
                 <button class="tab-btn" onclick="switchTab('return')" id="tab-return">📥 Check In</button>
                 <button class="tab-btn" onclick="switchTab('overdue')" id="tab-overdue">⚠️ Overdue</button>
                 <button class="tab-btn" onclick="switchTab('students')" id="tab-students">👤 Borrowers</button>
+                <button class="tab-btn" onclick="switchTab('damaged')" id="tab-damaged">🔧 Damaged</button>
+                <button class="tab-btn" onclick="switchTab('analytics')" id="tab-analytics">📊 Analytics</button>
             </div>
         </div>
 
         <div class="container">
             <div class="stats-row">
                 <div class="stat-float">
-                    <div class="label">Total Books</div>
+                    <div class="label">📚 Total Books</div>
                     <div class="value" id="statTotalBooks">0</div>
+                    <div class="mini-chart" id="totalChart"></div>
                 </div>
                 <div class="stat-float">
-                    <div class="label">Borrowed</div>
+                    <div class="label">📤 Borrowed</div>
                     <div class="value warning" id="statBorrowed">0</div>
+                    <div class="mini-chart" id="borrowedChart"></div>
                 </div>
                 <div class="stat-float">
-                    <div class="label">Overdue</div>
+                    <div class="label">⚠️ Overdue</div>
                     <div class="value danger" id="statOverdue">0</div>
+                    <div class="mini-chart" id="overdueChart"></div>
                 </div>
                 <div class="stat-float">
-                    <div class="label">Active Borrowers</div>
+                    <div class="label">👤 Borrowers</div>
                     <div class="value success" id="statBorrowers">0</div>
+                    <div class="mini-chart" id="borrowersChart"></div>
+                </div>
+                <div class="stat-float">
+                    <div class="label">🔧 Damaged</div>
+                    <div class="value" id="statDamaged" style="color:var(--warning);">0</div>
+                    <div class="mini-chart" id="damagedChart"></div>
+                </div>
+                <div class="stat-float">
+                    <div class="label">📊 Available</div>
+                    <div class="value" id="statAvailable" style="color:var(--success);">0</div>
+                    <div class="progress-ring" id="availRing" style="margin-top:8px;">
+                        <svg width="60" height="60" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="24"/>
+                            <circle class="progress-ring-fill" id="availRingFill" cx="30" cy="30" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8"/>
+                        </svg>
+                        <div class="progress-ring-text" id="availRingText">0%</div>
+                    </div>
                 </div>
             </div>
 
@@ -887,6 +1235,44 @@
                     <div id="studentsTable"></div>
                 </div>
             </div>
+
+            <!-- ===== DAMAGED BOOKS SECTION ===== -->
+            <div class="section" id="section-damaged">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">🔧 Damaged & Repair Books</div>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('addDamageModal')">➕ Report Damage</button>
+                    </div>
+                    <div class="form-grid" style="margin-bottom:20px;">
+                        <div class="search-box" style="max-width:100%;">
+                            <input type="text" id="damageSearch" placeholder="Search damaged books..." oninput="renderDamagedBooks()">
+                        </div>
+                    </div>
+                    <div id="damagedTable"></div>
+                </div>
+            </div>
+
+            <!-- ===== ANALYTICS SECTION ===== -->
+            <div class="section" id="section-analytics">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">📊 Library Analytics</div>
+                        <select id="analyticsPeriod" onchange="renderAnalytics()" style="padding:8px 12px;border-radius:10px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 3 Months</option>
+                            <option value="all">All Time</option>
+                        </select>
+                    </div>
+                    <div id="analyticsContent"></div>
+                </div>
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">📈 Recent Activity</div>
+                    </div>
+                    <div class="timeline" id="activityTimeline"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -928,6 +1314,79 @@
         </div>
     </div>
 
+    <!-- ===== ADD DAMAGE MODAL ===== -->
+    <div class="modal" id="addDamageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔧 Report Damaged Book</h2>
+                <button class="close-btn" onclick="closeModal('addDamageModal')">&times;</button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Book Title *</label>
+                    <input type="text" id="damageBookTitle" placeholder="e.g., Things Fall Apart" list="damageBookList">
+                    <datalist id="damageBookList"></datalist>
+                </div>
+                <div class="form-group">
+                    <label>Author</label>
+                    <input type="text" id="damageAuthor" placeholder="e.g., Chinua Achebe">
+                </div>
+                <div class="form-group">
+                    <label>Damage Type *</label>
+                    <select id="damageType">
+                        <option value="torn-pages">📄 Torn Pages</option>
+                        <option value="water-damage">💧 Water Damage</option>
+                        <option value="missing-pages">📑 Missing Pages</option>
+                        <option value="broken-spine">📕 Broken Spine</option>
+                        <option value="writing-marks">✏️ Writing/Marks</option>
+                        <option value="cover-damage">🎨 Cover Damage</option>
+                        <option value="lost">❌ Lost / Missing</option>
+                        <option value="other">🔧 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Severity *</label>
+                    <select id="damageSeverity">
+                        <option value="minor">🟢 Minor – Can still be used</option>
+                        <option value="moderate">🟡 Moderate – Needs repair</option>
+                        <option value="severe">🔴 Severe – Discard / Replace</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column:1/-1;">
+                    <label>Notes / Description</label>
+                    <input type="text" id="damageNotes" placeholder="Describe the damage in detail...">
+                </div>
+                <div class="form-group">
+                    <label>Reported By</label>
+                    <input type="text" id="damageReporter" placeholder="e.g., Librarian Name">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="damageStatus">
+                        <option value="damaged">🔴 Damaged – Awaiting Action</option>
+                        <option value="repair">🔧 Sent for Repair</option>
+                        <option value="discarded">🗑️ Discarded / Replaced</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;margin-top:20px;padding:16px;font-size:1rem;" onclick="addDamagedBook()">
+                Report Damage
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== NOTIFICATIONS MODAL ===== -->
+    <div class="modal" id="notifModal">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <h2>🔔 Notifications</h2>
+                <button class="close-btn" onclick="closeModal('notifModal')">&times;</button>
+            </div>
+            <div id="notifList" style="max-height:400px;overflow-y:auto;"></div>
+            <button class="btn btn-ghost" style="width:100%;margin-top:12px;" onclick="clearAllNotifications()">Clear All</button>
+        </div>
+    </div>
+
     <div class="modal" id="changePinModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -957,6 +1416,9 @@
     </div>
 
     <div class="toast" id="toast"></div>
+
+    <!-- Floating Action Button -->
+    <button class="fab no-print" onclick="openModal('addBookModal')" data-tooltip="Quick Add Book (+)">➕</button>
 
     <!-- Floating Help Button -->
     <button class="shortcut-help-btn" onclick="toggleShortcutsPanel()" title="Keyboard Shortcuts (?)" style="position:fixed;bottom:20px;left:20px;z-index:999;width:48px;height:48px;border-radius:50%;background:var(--primary);color:white;border:none;cursor:pointer;font-size:1.2rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
@@ -1188,10 +1650,14 @@
 
         let books = JSON.parse(localStorage.getItem('libBooks')) || [];
         let transactions = JSON.parse(localStorage.getItem('libTransactions')) || [];
+        let damagedBooks = JSON.parse(localStorage.getItem('libDamaged')) || [];
+        let notifications = JSON.parse(localStorage.getItem('libNotifications')) || [];
 
         function saveData() {
             localStorage.setItem('libBooks', JSON.stringify(books));
             localStorage.setItem('libTransactions', JSON.stringify(transactions));
+            localStorage.setItem('libDamaged', JSON.stringify(damagedBooks));
+            localStorage.setItem('libNotifications', JSON.stringify(notifications));
             updateStats();
         }
 
@@ -1222,6 +1688,8 @@
             if (tab === 'return') renderReturnList();
             if (tab === 'overdue') renderOverdue();
             if (tab === 'students') renderStudents();
+            if (tab === 'damaged') renderDamagedBooks();
+            if (tab === 'analytics') renderAnalytics();
         }
 
         function updateStats() {
@@ -1229,10 +1697,67 @@
             const borrowed = transactions.filter(t => !t.returned).length;
             const overdue = transactions.filter(t => !t.returned && new Date(t.dueDate) < new Date()).length;
             const borrowers = [...new Set(transactions.filter(t => !t.returned).map(t => t.studentId))].length;
+            const damaged = damagedBooks.filter(d => d.status !== 'discarded').length;
+            const available = Math.max(0, total - borrowed - damaged);
+            const availPercent = total > 0 ? Math.round((available / total) * 100) : 0;
+
             document.getElementById('statTotalBooks').textContent = total;
             document.getElementById('statBorrowed').textContent = borrowed;
             document.getElementById('statOverdue').textContent = overdue;
             document.getElementById('statBorrowers').textContent = borrowers;
+            document.getElementById('statDamaged').textContent = damaged;
+            document.getElementById('statAvailable').textContent = available;
+
+            // Update progress ring
+            const circumference = 2 * Math.PI * 24; // r=24
+            const offset = circumference - (availPercent / 100) * circumference;
+            const ringFill = document.getElementById('availRingFill');
+            const ringText = document.getElementById('availRingText');
+            if (ringFill) {
+                ringFill.style.strokeDasharray = circumference;
+                ringFill.style.strokeDashoffset = offset;
+                ringFill.style.stroke = availPercent > 50 ? 'var(--success)' : availPercent > 20 ? 'var(--warning)' : 'var(--danger)';
+            }
+            if (ringText) ringText.textContent = availPercent + '%';
+
+            // Update mini charts
+            updateMiniCharts();
+
+            // Update notification badge
+            updateNotifBadge();
+        }
+
+        function updateMiniCharts() {
+            const days = 7;
+            const now = new Date();
+            const charts = {
+                totalChart: { color: 'success-bar', data: [] },
+                borrowedChart: { color: 'warning-bar', data: [] },
+                overdueChart: { color: 'danger-bar', data: [] },
+                damagedChart: { color: 'warning-bar', data: [] }
+            };
+
+            for (let i = days - 1; i >= 0; i--) {
+                const d = new Date(now);
+                d.setDate(d.getDate() - i);
+                const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+                const dayEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+
+                charts.totalChart.data.push(books.length);
+                charts.borrowedChart.data.push(transactions.filter(t => !t.returned && new Date(t.borrowedDate) < dayEnd).length);
+                charts.overdueChart.data.push(transactions.filter(t => !t.returned && new Date(t.dueDate) < dayEnd && new Date(t.dueDate) >= dayStart).length);
+                charts.damagedChart.data.push(damagedBooks.filter(b => new Date(b.reportedDate) < dayEnd).length);
+            }
+
+            Object.entries(charts).forEach(([id, chart]) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const max = Math.max(...chart.data, 1);
+                el.innerHTML = chart.data.map(v => {
+                    const h = Math.max((v / max) * 100, 4);
+                    return `<div class="mini-bar ${chart.color}" style="height:${h}%;" title="${v}"></div>`;
+                }).join('');
+            });
         }
 
         function deleteBook(bookId) {
@@ -1312,6 +1837,7 @@
             document.getElementById('newBookQty').value = '1';
             closeModal('addBookModal');
             showToast(`Added "${title}"`);
+            addNotification(`📚 New book added: "${title}" by ${author}`, 'import');
             renderBooks();
         }
 
@@ -1419,6 +1945,7 @@
             document.getElementById('borrowDays').value = '14';
             document.getElementById('borrowQty').value = '1';
             showToast(`Checked out ${qty} copy(s) to ${name}`);
+            addNotification(`📤 ${name} borrowed "${book.title}" (${qty}x)`, 'borrow');
             renderBooks();
         }
 
@@ -1510,6 +2037,7 @@
             if (returnedCount > 0) {
                 saveData();
                 showToast(`Returned ${returnedCount} copy(s) of "${bookTitle}" from ${studentName}`);
+                addNotification(`📥 ${studentName} returned "${bookTitle}" (${returnedCount}x)`, 'return');
                 renderReturnList();
                 renderBooks();
                 renderOverdue();
@@ -1659,6 +2187,7 @@
             a.click();
             URL.revokeObjectURL(url);
             showToast('Library data exported!');
+            addNotification('📤 Library data exported', 'export');
         }
 
         function importData(input) {
@@ -1765,6 +2294,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('lib_dark') === 'true') document.body.classList.add('dark-mode');
             initPin();
+            updateNotifBadge();
         });
     </script>
 </body>
